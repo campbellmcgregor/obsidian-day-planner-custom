@@ -3,8 +3,8 @@
 node_modules
 
 # build
-main.js
-styles.css
+# main.js
+# styles.css
 *.js.map
 *.zip
 dist/

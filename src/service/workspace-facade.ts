@@ -118,13 +118,18 @@ export class WorkspaceFacade {
   }
 
   async createNoteForRemoteEvent(task: RemoteTask) {
-    const fileName = await this.generateUniqueFileName(task.summary);
-    const normalizedPath = normalizePath(fileName);
+    try {
+      const fileName = await this.generateUniqueFileName(task.summary);
+      const normalizedPath = normalizePath(fileName);
 
-    // Create an empty note with the event title as the filename
-    const file = await this.workspace.vault.create(normalizedPath, "");
-    
-    // Open the note in the editor
-    await this.openFileInEditor(file);
+      // Create an empty note with the event title as the filename using VaultFacade
+      const file = await this.vaultFacade.createFile(normalizedPath, "");
+      
+      // Open the note in the editor
+      await this.openFileInEditor(file);
+    } catch (error) {
+      console.error("Error creating note for remote event:", error);
+      throw error;
+    }
   }
 }

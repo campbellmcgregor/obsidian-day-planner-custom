@@ -51,4 +51,8 @@ export class VaultFacade {
   checkFileExists(path: string) {
     return this.vault.getAbstractFileByPath(path) !== null;
   }
+
+  async createFile(path: string, content: string = "") {
+    return await this.vault.create(path, content);
+  }
 }

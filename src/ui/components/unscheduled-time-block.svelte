@@ -3,6 +3,7 @@
 
   import LocalTimeBlock from "./local-time-block.svelte";
   import RemoteTimeBlockContent from "./remote-time-block-content.svelte";
+  import RemoteTimeBlockControls from "./remote-time-block-controls.svelte";
   import TimeBlockBase from "./time-block-base.svelte";
   import TimeBlockControls from "./time-block-controls.svelte";
 
@@ -10,9 +11,11 @@
 </script>
 
 {#if isRemote(task)}
-  <TimeBlockBase {task}>
-    <RemoteTimeBlockContent {task} />
-  </TimeBlockBase>
+  <RemoteTimeBlockControls {task}>
+    <TimeBlockBase {task}>
+      <RemoteTimeBlockContent {task} />
+    </TimeBlockBase>
+  </RemoteTimeBlockControls>
 {:else}
   <TimeBlockControls {task}>
     {#snippet timeBlock({ isActive, onPointerUp, use })}

@@ -2,6 +2,7 @@ import type { Moment } from "moment/moment";
 import {
   FileView,
   MarkdownView,
+  normalizePath,
   TFile,
   Workspace,
   WorkspaceLeaf,
@@ -13,6 +14,7 @@ import {
 } from "obsidian-daily-notes-interface";
 import { isInstanceOf, isNotVoid } from "typed-assert";
 
+import type { RemoteTask } from "../task-types";
 import type { VaultFacade } from "./vault-facade";
 
 function doesLeafContainFile(leaf: WorkspaceLeaf, file: TFile) {
@@ -92,5 +94,37 @@ export class WorkspaceFacade {
       ?.setEphemeralState({ line });
 
     editor.setCursor({ line, ch: editor.getLine(line).length });
+  }
+
+  private sanitizeFileName(name: string): string {
+    // Remove or replace invalid filesystem characters
+    return name
+      .replace(/[<>:"/\\|?*\x00-\x1f]/g, "")
+      .replace(/\.$/, "")
+      .trim();
+  }
+
+  private async generateUniqueFileName(baseName: string): Promise<string> {
+    const sanitized = this.sanitizeFileName(baseName);
+    let fileName = `${sanitized}.md`;
+    let counter = 1;
+
+    while (this.vaultFacade.checkFileExists(fileName)) {
+      fileName = `${sanitized} ${counter}.md`;
+      counter++;
+    }
+
+    return fileName;
+  }
+
+  async createNoteForRemoteEvent(task: RemoteTask) {
+    const fileName = await this.generateUniqueFileName(task.summary);
+    const normalizedPath = normalizePath(fileName);
+
+    // Create an empty note with the event title as the filename
+    const file = await this.workspace.vault.create(normalizedPath, "");
+    
+    // Open the note in the editor
+    await this.openFileInEditor(file);
   }
 }

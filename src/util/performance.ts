@@ -12,7 +12,7 @@ export function withPerformanceReport<T>(
     .map(([key, value]) => `${key}: ${value || "empty"}`)
     .join("\n  ");
 
-  console.debug(`obsidian-day-planner:
+  console.debug(`obsidian-day-planner-custom:
   took: ${duration.toFixed(2)} ms
   ${formattedVariables}
   `);

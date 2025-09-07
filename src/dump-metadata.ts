@@ -3,7 +3,7 @@ import { getAPI } from "obsidian-dataview";
 
 const fixtureVaultPath = "fixture-vault";
 const metadataDumpPath =
-  ".obsidian/plugins/obsidian-day-planner/fixtures/metadata-dump";
+  ".obsidian/plugins/obsidian-day-planner-custom/fixtures/metadata-dump";
 
 export function createDumpMetadataCommand(app: App) {
   return async () => {
